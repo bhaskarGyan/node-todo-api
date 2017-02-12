@@ -102,3 +102,34 @@ describe('/Post todo', () => {
         });
     });
 });
+
+describe('DELETE /todo/:id',() => {
+    beforeEach((done) => {
+        Todo.remove({}).then(() => {
+            return Todo.insertMany(todos)
+        }).then(() => done());
+    });
+
+   it('Should delete todo from the list',(done) => {
+       request(app)
+           .delete(`/todos/${todos[0]._id}`)
+           .expect(200)
+           .expect((res) =>{
+            expect(res.body.todo.text).toBe(todos[0].text)
+           })
+           .end(done);
+   });
+
+   it('Should return 404 if todo not found',(done) => {
+            request(app)
+                .delete(`/todos/${new ObjectId()}`)
+                .expect(404)
+                .end(done)
+   });
+   it('Should return 404 if object id is invalid',(done) => {
+            request(app)
+                .delete(`/todos/123`)
+                .expect(404)
+                .end(done)
+   });
+});
