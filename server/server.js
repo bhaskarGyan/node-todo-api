@@ -1,6 +1,15 @@
 /**
  * Created by bhaskar on 09/02/17.
  */
+let env = process.env.NODE_ENV || 'development';
+
+if(env === 'development'){
+    process.env.PORT = 3000;
+    process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoApp';
+}else if(env === 'test'){
+    process.env.PORT = 3000;
+    process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoAppTest';
+}
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -11,7 +20,7 @@ const {ObjectId} = require('mongodb');
 let {Todo} = require('./models/todo');
 let {User} = require('./models/user');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 let app = express();
 
 app.use(bodyParser.json());
