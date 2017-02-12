@@ -1,11 +1,14 @@
 /**
  * Created by bhaskar on 11/02/17.
  */
+const {ObjectId} = require('mongodb');
 const expect = require('expect');
 const request = require('supertest');
 const todos = [{
+    _id: new ObjectId(),
     text: 'First todo test'
 }, {
+    _id: new ObjectId(),
     text: 'Second todo text'
 }];
 
@@ -70,5 +73,32 @@ describe('/Post todo', () => {
                 })
                 .end(done);
         })
+    });
+
+    describe('GET all todos with id /todo/:id', () => {
+        it('should return todos with valid id', (done) => {
+
+            request(app)
+                .get(`/todos/${todos[0]._id}`)
+                .expect(200)
+                .expect(res => {
+                    expect(res.body.todo.text).toBe(todos[0].text)
+                })
+                .end(done);
+        });
+
+        it('Should return 404 if todo not found', done => {
+            request(app)
+                .get(`/todos/${new ObjectId()}`)
+                .expect(404)
+                .end(done)
+        });
+
+        it('Should return 404 for non object ids', done => {
+            request(app)
+                .get('/todos/4000')
+                .expect(404)
+                .end(done)
+        });
     });
 });
