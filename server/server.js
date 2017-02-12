@@ -9,15 +9,13 @@ let {ObjectId} = require('mongodb');
 let {Todo} = require('./models/todo');
 let {User} = require('./models/user');
 
-
+const port = process.env.port || 3000;
 let app = express();
 
 app.use(bodyParser.json());
 
 app.post('/todos', (req, res) => {
-    console.log('Bhaskar   ');
-    console.log(req.body.text);
-    let todo = new Todo({
+   let todo = new Todo({
         text: req.body.text,
         completed: req.body.completed
     });
@@ -26,7 +24,6 @@ app.post('/todos', (req, res) => {
     }, err => {
         res.status(400).send(err);
     });
-    console.log(req.body.text);
 
 });
 app.get('/todos', (req, res) => {
@@ -51,8 +48,8 @@ app.get('/todos/:id',(req,res) => {
     }).catch(e => res.status(400).send(e));
 
 });
-app.listen(3000, () => {
-    console.log('App started on port 3000');
+app.listen(port, () => {
+    console.log(`App started on port ${port}`);
 });
 
 module.exports = {app};
